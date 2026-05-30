@@ -40,16 +40,6 @@ Designed for roleplay servers that want a lightweight, immersive car culture exp
 
 ## Screenshots
 
-Add PNG or JPG files inside `docs/screenshots/`:
-
-| File | What to capture |
-|---|---|
-| `feed.png` | Main feed with posts |
-| `post.png` | Post detail / comments |
-| `profile.png` | Player profile and garage |
-| `events.png` | Events list or create screen |
-| `ranking.png` | Weekly ranking |
-
 <div align="center">
 
 ### Feed & posts
