@@ -2,7 +2,7 @@
 
 # CarSpot
 
-**A car social network for LB Phone — share builds, meet up, compete, and show off your garage.**
+**A car social network for LB Phone, share builds, meet up, compete, and show off your garage.**
 
 [![License](https://img.shields.io/badge/License-Free-green?style=for-the-badge)](LICENSE)
 [![LB Phone](https://img.shields.io/badge/LB%20Phone-Required-blue?style=for-the-badge)](https://docs.lbscripts.com/)
@@ -110,7 +110,7 @@ Config.RankingDays = 7
 
 | Setting | Description | Default |
 |---|---|---|
-| `Config.Locale` | UI and server message language | `'en'` |
+| `Config.Locale` | UI and server message language | `'en'`, `'pt'`, `'es'`, `'fr'`, `'de'`, `'it'`|
 | `Config.FeedPageSize` | Posts loaded per feed page | `10` |
 | `Config.MaxPostTitleLength` | Max characters for post titles | `80` |
 | `Config.MaxCommentLength` | Max characters for comments | `200` |
