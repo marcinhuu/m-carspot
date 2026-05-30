@@ -8,7 +8,7 @@
 [![LB Phone](https://img.shields.io/badge/LB%20Phone-Required-blue?style=for-the-badge)](https://docs.lbscripts.com/)
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange?style=for-the-badge)](https://github.com/marcinhu/lb-phone-carspot/releases)
 
-[Features](#features) · [Installation](#installation) · [Configuration](#configuration) · [Support](#support)
+[Features](#features) · [Screenshots](#screenshots) · [Installation](#installation) · [Configuration](#configuration) · [Support](#support)
 
 </div>
 
@@ -35,6 +35,38 @@ Designed for roleplay servers that want a lightweight, immersive car culture exp
 | **Social** | Follow other players, browse their posts and garage, view post detail with comments |
 | **Locales** | Built-in translations: English, Portuguese, Spanish, French, German, Italian |
 | **Frameworks** | Auto-detects **QBCore**, **Qbox**, and **ESX** |
+
+---
+
+## Screenshots
+
+Add PNG or JPG files inside `docs/screenshots/`:
+
+| File | What to capture |
+|---|---|
+| `feed.png` | Main feed with posts |
+| `post.png` | Post detail / comments |
+| `profile.png` | Player profile and garage |
+| `events.png` | Events list or create screen |
+| `ranking.png` | Weekly ranking |
+
+<div align="center">
+
+### Feed & posts
+
+<img src="docs/screenshots/feed.png" alt="CarSpot feed" width="280"/>
+&nbsp;&nbsp;
+<img src="docs/screenshots/post.png" alt="CarSpot post detail" width="280"/>
+
+### Profile, events & ranking
+
+<img src="docs/screenshots/profile.png" alt="CarSpot profile" width="280"/>
+&nbsp;&nbsp;
+<img src="docs/screenshots/events.png" alt="CarSpot events" width="280"/>
+&nbsp;&nbsp;
+<img src="docs/screenshots/ranking.png" alt="CarSpot ranking" width="280"/>
+
+</div>
 
 ---
 
