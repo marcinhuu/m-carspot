@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CarSpot</title>
+    <link rel="stylesheet" href="colors.css" />
+    <link rel="stylesheet" href="frame.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+<div id="phone-wrapper">
+<div class="app" id="content">
+    <nav class="bottom-nav" id="bottom-nav">
+        <button class="nav-btn active" data-view="feed">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span data-locale="nav_feed">Feed</span>
+        </button>
+        <button class="nav-btn" data-view="events">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span data-locale="nav_events">Events</span>
+        </button>
+        <button class="nav-btn nav-create" data-view="create-post">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </button>
+        <button class="nav-btn" data-view="ranking">
+            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <span data-locale="nav_ranking">Ranking</span>
+        </button>
+        <button class="nav-btn" data-view="profile">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span data-locale="nav_profile">Profile</span>
+        </button>
+    </nav>
+
+    <div class="view active" id="view-feed">
+        <div class="app-header">
+            <span class="app-logo"><i class="fas fa-car-side"></i> <span data-locale="app_name">CarSpot</span></span>
+            <button class="icon-btn" id="btn-saved">
+                <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+            </button>
+        </div>
+        <div class="scroll-area" id="feed-list">
+            <div class="loading-spinner" id="feed-loading"><div class="spinner"></div></div>
+        </div>
+        <div id="feed-end-msg" class="end-msg" style="display:none" data-locale="feed_no_more">No more posts</div>
+    </div>
+
+    <div class="view" id="view-post-detail">
+        <div class="app-header with-back">
+            <button class="icon-btn back-btn" data-back="feed"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span class="header-title" data-locale="header_post">Post</span>
+        </div>
+        <div class="scroll-area post-detail-scroll" id="post-detail-content"></div>
+        <div class="comment-form" id="post-comment-form" style="display:none">
+            <input class="comment-input" id="comment-input" type="text" data-locale-placeholder="post_comment_placeholder" placeholder="Add a comment..." maxlength="200" />
+            <button class="send-btn" id="send-comment-btn">
+                <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="view" id="view-create-post">
+        <div class="app-header with-back">
+            <button class="icon-btn back-btn" data-back="feed"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span class="header-title" data-locale="header_new_post">New Post</span>
+        </div>
+        <div class="scroll-area form-scroll">
+            <div class="form-photo-picker" id="cp-photo-picker">
+                <div class="photo-placeholder" id="cp-photo-preview">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <span data-locale="post_tap_photo">Tap to add photo</span>
+                </div>
+            </div>
+            <div class="form-body">
+                <input class="form-input" id="cp-title" type="text" data-locale-placeholder="post_title_ph" placeholder="Title *" maxlength="80" />
+                <textarea class="form-textarea" id="cp-desc" data-locale-placeholder="post_desc_ph" placeholder="Description..." maxlength="500"></textarea>
+                <input class="form-input" id="cp-location" type="text" data-locale-placeholder="post_location_ph" placeholder="Location" maxlength="255" />
+                <div class="form-section-label" data-locale="post_vehicle_info">Vehicle Info (optional)</div>
+                <div class="form-row">
+                    <input class="form-input" id="cp-brand" type="text" data-locale-placeholder="post_brand_ph" placeholder="Brand" maxlength="100" />
+                    <input class="form-input" id="cp-model" type="text" data-locale-placeholder="post_model_ph" placeholder="Model" maxlength="100" />
+                </div>
+                <div class="form-row">
+                    <input class="form-input" id="cp-plate" type="text" data-locale-placeholder="post_plate_ph" placeholder="Plate" maxlength="20" />
+                    <input class="form-input" id="cp-color" type="text" data-locale-placeholder="post_color_ph" placeholder="Color" maxlength="50" />
+                </div>
+                <select class="form-select" id="cp-class">
+                    <option value="" data-locale="post_vehicle_class">Vehicle Class</option>
+                    <option value="S" data-locale="vehicle_class_s">S — Super</option>
+                    <option value="X" data-locale="vehicle_class_x">X — X-Class</option>
+                    <option value="A" data-locale="vehicle_class_a">A — Sport</option>
+                    <option value="B" data-locale="vehicle_class_b">B — Sport</option>
+                    <option value="C" data-locale="vehicle_class_c">C — Classic</option>
+                    <option value="D" data-locale="vehicle_class_d">D — Classic</option>
+                    <option value="O" data-locale="vehicle_class_o">O — Off-Road</option>
+                    <option value="SUV" data-locale="vehicle_class_suv">SUV</option>
+                    <option value="Muscle" data-locale="vehicle_class_muscle">Muscle</option>
+                    <option value="Sedan" data-locale="vehicle_class_sedan">Sedan</option>
+                    <option value="Truck" data-locale="vehicle_class_truck">Truck</option>
+                    <option value="Van" data-locale="vehicle_class_van">Van</option>
+                    <option value="Motorcycle" data-locale="vehicle_class_motorcycle">Motorcycle</option>
+                </select>
+                <textarea class="form-textarea small" id="cp-mods" data-locale-placeholder="post_mods_ph" placeholder="Modifications..." maxlength="1000"></textarea>
+                <button class="btn-primary" id="btn-submit-post" data-locale="post_publish">Publish Post</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="view" id="view-events">
+        <div class="app-header">
+            <span class="header-title" data-locale="header_events">Events</span>
+            <button class="icon-btn" id="btn-create-event">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </button>
+        </div>
+        <div class="scroll-area" id="events-list">
+            <div class="loading-spinner" id="events-loading"><div class="spinner"></div></div>
+        </div>
+    </div>
+
+    <div class="view" id="view-create-event">
+        <div class="app-header with-back">
+            <button class="icon-btn back-btn" data-back="events"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span class="header-title" data-locale="header_new_event">New Event</span>
+        </div>
+        <div class="scroll-area form-scroll">
+            <div class="form-field" style="padding:14px 14px 0">
+                <label class="form-label" data-locale="event_banner_label">Event banner</label>
+                <p class="form-hint" data-locale="event_banner_hint">Optional cover image shown at the top of your event card.</p>
+            </div>
+            <div class="form-photo-picker" id="ce-photo-picker">
+                <div class="photo-placeholder" id="ce-photo-preview">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <span data-locale="event_tap_banner">Tap to add banner</span>
+                </div>
+            </div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label class="form-label" for="ce-name" data-locale="event_name_label">Event name</label>
+                    <p class="form-hint" data-locale="event_name_hint">The title displayed on the events list. Required.</p>
+                    <input class="form-input" id="ce-name" type="text" data-locale-placeholder="event_name_ph" placeholder="e.g. Downtown Car Meet" maxlength="80" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label" for="ce-desc" data-locale="event_desc_label">Description</label>
+                    <p class="form-hint" data-locale="event_desc_hint">Tell people what to expect.</p>
+                    <textarea class="form-textarea" id="ce-desc" data-locale-placeholder="event_desc_ph" placeholder="Describe your event..." maxlength="300"></textarea>
+                </div>
+                <div class="form-field">
+                    <label class="form-label" for="ce-type" data-locale="event_type_label">Event type</label>
+                    <p class="form-hint" data-locale="event_type_hint">Choose the category that best fits your event.</p>
+                    <select class="form-select" id="ce-type">
+                        <option value="car_meet" data-locale="event_type_car_meet">Car Meet</option>
+                        <option value="drag_race" data-locale="event_type_drag_race">Drag Race</option>
+                        <option value="drift_night" data-locale="event_type_drift_night">Drift Night</option>
+                        <option value="offroad" data-locale="event_type_offroad">Offroad Expedition</option>
+                        <option value="other" data-locale="event_type_other">Other</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label class="form-label" for="ce-location" data-locale="event_location_label">Location</label>
+                    <p class="form-hint" data-locale="event_location_hint">Where participants should go.</p>
+                    <input class="form-input" id="ce-location" type="text" data-locale-placeholder="event_location_ph" placeholder="e.g. Legion Square" maxlength="255" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label" for="ce-time" data-locale="event_time_label">Date &amp; time</label>
+                    <p class="form-hint" data-locale="event_time_hint">When the event starts.</p>
+                    <input class="form-input" id="ce-time" type="datetime-local" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label" for="ce-maxpart" data-locale="event_max_label">Max participants</label>
+                    <p class="form-hint" data-locale="event_max_hint">Maximum number of players who can attend.</p>
+                    <input class="form-input" id="ce-maxpart" type="number" placeholder="50" min="2" max="500" value="50" />
+                </div>
+                <button class="btn-primary" id="btn-submit-event" data-locale="event_create">Create Event</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="view" id="view-ranking">
+        <div class="app-header">
+            <span class="header-title" data-locale="header_ranking">Weekly Ranking</span>
+        </div>
+        <div class="scroll-area" id="ranking-content">
+            <div class="loading-spinner" id="ranking-loading"><div class="spinner"></div></div>
+        </div>
+    </div>
+
+    <div class="view" id="view-profile">
+        <div class="app-header with-back" id="profile-header">
+            <button class="icon-btn back-btn" data-back="feed" id="profile-back-btn" style="display:none"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span class="header-title" id="profile-header-name" data-locale="header_profile">Profile</span>
+            <button class="icon-btn" id="btn-edit-profile" style="display:none">
+                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn-follow" id="btn-follow-user" style="display:none" data-locale="profile_follow">Follow</button>
+        </div>
+        <div class="scroll-area" id="profile-content"></div>
+    </div>
+
+    <div class="view" id="view-edit-profile">
+        <div class="app-header with-back">
+            <button class="icon-btn back-btn" data-back="profile"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span class="header-title" data-locale="header_edit_profile">Edit Profile</span>
+        </div>
+        <div class="scroll-area form-scroll">
+            <div class="edit-cover-row">
+                <label class="form-label" data-locale="profile_cover_label">Cover photo</label>
+                <p class="form-hint" data-locale="profile_cover_hint">Shown behind your profile picture.</p>
+                <div class="edit-cover" id="edit-cover-preview">
+                    <span class="edit-cover-placeholder"><i class="fas fa-image"></i></span>
+                </div>
+                <button class="btn-secondary small" id="btn-change-cover" data-locale="profile_change_cover">Change cover</button>
+            </div>
+            <div class="edit-avatar-row">
+                <label class="form-label" data-locale="profile_photo_label">Profile photo</label>
+                <div class="edit-avatar" id="edit-avatar-preview"></div>
+                <button class="btn-secondary small" id="btn-change-avatar" data-locale="profile_change_photo">Change photo</button>
+            </div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label class="form-label" for="ep-username" data-locale="profile_username_label">Username</label>
+                    <p class="form-hint" data-locale="profile_username_hint">3–30 characters.</p>
+                    <input class="form-input" id="ep-username" type="text" data-locale-placeholder="profile_username_ph" placeholder="Username" maxlength="30" />
+                </div>
+                <div class="form-field">
+                    <label class="form-label" for="ep-bio" data-locale="profile_bio_label">Bio</label>
+                    <p class="form-hint" data-locale="profile_bio_hint">A short description shown on your profile.</p>
+                    <textarea class="form-textarea" id="ep-bio" data-locale-placeholder="profile_bio_ph" placeholder="Tell others about yourself..." maxlength="150"></textarea>
+                </div>
+                <button class="btn-primary" id="btn-save-profile" data-locale="profile_save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="view" id="view-garage">
+        <div class="app-header with-back">
+            <button class="icon-btn back-btn" data-back="profile"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span class="header-title" data-locale="header_garage">Garage</span>
+            <button class="icon-btn" id="btn-add-garage-vehicle" style="display:none" data-locale-title="garage_add_vehicle" title="Add vehicle">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </button>
+        </div>
+        <div class="scroll-area" id="garage-list"></div>
+    </div>
+
+    <div class="view" id="view-add-garage">
+        <div class="app-header with-back">
+            <button class="icon-btn back-btn" data-back="garage"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span class="header-title" data-locale="header_add_vehicle">Add Vehicle</span>
+        </div>
+        <div class="scroll-area form-scroll">
+            <div class="form-photo-picker" id="ag-photo-picker">
+                <div class="photo-placeholder" id="ag-photo-preview">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <span data-locale="garage_tap_photo">Tap to add photo</span>
+                </div>
+            </div>
+            <div class="form-body">
+                <div class="form-row">
+                    <input class="form-input" id="ag-brand" type="text" data-locale-placeholder="garage_brand_ph" placeholder="Brand *" maxlength="100" />
+                    <input class="form-input" id="ag-model" type="text" data-locale-placeholder="garage_model_ph" placeholder="Model *" maxlength="100" />
+                </div>
+                <div class="form-row">
+                    <input class="form-input" id="ag-plate" type="text" data-locale-placeholder="garage_plate_ph" placeholder="Plate" maxlength="20" />
+                    <input class="form-input" id="ag-color" type="text" data-locale-placeholder="garage_color_ph" placeholder="Color" maxlength="50" />
+                </div>
+                <select class="form-select" id="ag-class">
+                    <option value="" data-locale="post_vehicle_class">Vehicle Class</option>
+                    <option value="S" data-locale="vehicle_class_s">S — Super</option>
+                    <option value="X" data-locale="vehicle_class_x">X — X-Class</option>
+                    <option value="A" data-locale="vehicle_class_a">A — Sport</option>
+                    <option value="B" data-locale="vehicle_class_b">B — Sport</option>
+                    <option value="C" data-locale="vehicle_class_c">C — Classic</option>
+                    <option value="D" data-locale="vehicle_class_d">D — Classic</option>
+                    <option value="O" data-locale="vehicle_class_o">O — Off-Road</option>
+                    <option value="SUV" data-locale="vehicle_class_suv">SUV</option>
+                    <option value="Muscle" data-locale="vehicle_class_muscle">Muscle</option>
+                    <option value="Sedan" data-locale="vehicle_class_sedan">Sedan</option>
+                    <option value="Truck" data-locale="vehicle_class_truck">Truck</option>
+                    <option value="Van" data-locale="vehicle_class_van">Van</option>
+                    <option value="Motorcycle" data-locale="vehicle_class_motorcycle">Motorcycle</option>
+                </select>
+                <textarea class="form-textarea small" id="ag-mods" data-locale-placeholder="garage_mods_ph" placeholder="Modifications..." maxlength="1000"></textarea>
+                <button class="btn-primary" id="btn-submit-garage" data-locale="garage_add_btn">Add to Garage</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="view" id="view-saved">
+        <div class="app-header with-back">
+            <button class="icon-btn back-btn" data-back="feed"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span class="header-title" data-locale="header_saved">Saved Posts</span>
+        </div>
+        <div class="scroll-area" id="saved-list"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="bottom-sheet-overlay" id="vehicle-picker-overlay">
+        <div class="bottom-sheet">
+            <div class="bottom-sheet-handle"></div>
+            <div class="bottom-sheet-title" data-locale="garage_select_vehicle">Select a Vehicle</div>
+            <div class="bottom-sheet-list" id="vehicle-picker-list"></div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script src="dev.js"></script>
+<script src="script.js"></script>
+<script>
+    window.addEventListener('message', async (e) => {
+        if (e.data === 'componentsLoaded') {
+            await initApp();
+        }
+    });
+</script>
+</body>
+</html>
