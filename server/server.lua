@@ -1,3 +1,25 @@
+local function InitDatabase()
+    local sql = LoadResourceFile(GetCurrentResourceName(), 'carspot.sql')
+    if not sql or sql == '' then
+        print('^1[carspot] carspot.sql not found — import it manually^0')
+        return false
+    end
+
+    for statement in sql:gmatch('[^;]+') do
+        statement = statement:match('^%s*(.-)%s*$')
+        if statement and statement ~= '' then
+            MySQL.query.await(statement)
+        end
+    end
+
+    print('^2[carspot] Database tables ready^0')
+    return true
+end
+
+MySQL.ready(function()
+    InitDatabase()
+end)
+
 local function GetCitizenId(source)
     local Player = Bridge.GetPlayer(source)
     if not Player then return nil end
@@ -54,7 +76,6 @@ local function EnsureProfile(citizenid, name)
         { citizenid }
     )
     if not existing then
-        -- Generate a default unique username from name
         local base = name:gsub('%s+', '_'):lower():gsub('[^%w_]', '')
         local username = base
         local suffix = 1
@@ -601,7 +622,7 @@ lib.callback.register('carspot:getOwnedVehicles', function(source, _)
         ) or {}
     elseif Config.Framework == 'esx' then
         vehicles = MySQL.query.await(
-            'SELECT model AS vehicle, plate FROM owned_vehicles WHERE owner = ?',
+            'SELECT vehicle, plate FROM owned_vehicles WHERE owner = ?',
             { citizenid }
         ) or {}
     end

@@ -81,15 +81,9 @@ Clone or download this repository into your resources folder:
 resources/[lb-phone]/lb-phone-carspot
 ```
 
-### 2. Import the database
+### 2. Database
 
-Run the SQL file on your server database:
-
-```
-carspot.sql
-```
-
-Tables are created automatically on first start. If you are upgrading from an older version, restart the resource and the script will apply any missing columns.
+Tables are created automatically when the resource starts (`carspot.sql` is applied via oxmysql). Manual import is optional — use `carspot.sql` only if you prefer to run it yourself in HeidiSQL/phpMyAdmin.
 
 ### 3. Add to server.cfg
 

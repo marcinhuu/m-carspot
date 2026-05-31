@@ -13,9 +13,9 @@ end
 
 CreateThread(function()
     if not InitFramework() then
-        print('^1[lb-phone-carspot] No compatible framework found!^0')
+        print('^1[m-carspot] No compatible framework found!^0')
     else
-        print('^2[lb-phone-carspot] Framework detected: ' .. Config.Framework .. '^0')
+        print('^2[m-carspot] Framework detected: ' .. Config.Framework .. '^0')
     end
 end)
 

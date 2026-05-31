@@ -1,7 +1,7 @@
 Config = {}
 
 -- Framework: 'qbcore', 'esx' (auto-detected, no need to change)
-Config.Framework = 'qbcore'
+Config.Framework = 'esx'
 
 -- Locale: 'en', 'pt', 'es', 'fr', 'de', 'it'
 Config.Locale = 'en'

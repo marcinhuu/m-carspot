@@ -16,7 +16,7 @@ local function AddApp()
         fixBlur = true
     })
     if not added then
-        print('^1[lb-phone-carspot] Could not register app: ' .. tostring(err) .. '^0')
+        print('^1[m-carspot] Could not register app: ' .. tostring(err) .. '^0')
     end
 end
 
@@ -28,6 +28,64 @@ end)
 
 local function ServerCall(callbackName, data, cb)
     lib.callback(callbackName, false, cb, data or {})
+end
+
+local function TrimPlate(plate)
+    if type(plate) ~= 'string' then return plate end
+    return plate:match('^%s*(.-)%s*$') or plate
+end
+
+local function ResolveOwnedVehicleModel(rawVehicle)
+    if not rawVehicle or rawVehicle == '' then return nil end
+
+    if type(rawVehicle) == 'string' and rawVehicle:sub(1, 1) ~= '{' then
+        return rawVehicle
+    end
+
+    local props = type(rawVehicle) == 'table' and rawVehicle or nil
+    if not props then
+        local ok, decoded = pcall(json.decode, rawVehicle)
+        if ok and type(decoded) == 'table' then props = decoded end
+    end
+
+    if not props or props.model == nil then
+        return type(rawVehicle) == 'string' and rawVehicle or nil
+    end
+
+    local model = props.model
+    if type(model) == 'string' and not tonumber(model) then
+        return model
+    end
+
+    local hash = tonumber(model) or joaat(tostring(model))
+    local display = GetLabelText(GetDisplayNameFromVehicleModel(hash))
+    if not display or display == 'NULL' or display == '' then
+        display = GetDisplayNameFromVehicleModel(hash)
+    end
+    if display and display ~= 'NULL' and display ~= '' then
+        return display
+    end
+    return tostring(model)
+end
+
+local function NormalizeOwnedVehicles(vehicles)
+    local result = {}
+    for _, row in ipairs(vehicles or {}) do
+        local plate = TrimPlate(row.plate)
+        local model = ResolveOwnedVehicleModel(row.vehicle)
+
+        if Config.Framework == 'esx' and type(row.vehicle) == 'string' and row.vehicle:sub(1, 1) == '{' then
+            local ok, props = pcall(json.decode, row.vehicle)
+            if ok and type(props) == 'table' and props.plate and (not plate or plate == '') then
+                plate = TrimPlate(props.plate)
+            end
+        end
+
+        if model then
+            result[#result + 1] = { vehicle = model, plate = plate or '' }
+        end
+    end
+    return result
 end
 
 RegisterNUICallback('carspot:getProfile', function(data, cb)
@@ -152,7 +210,7 @@ end)
 
 RegisterNUICallback('carspot:getOwnedVehicles', function(data, cb)
     ServerCall('carspot:getOwnedVehicles', {}, function(vehicles)
-        cb(vehicles or {})
+        cb(NormalizeOwnedVehicles(vehicles))
     end)
 end)
 
