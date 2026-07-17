@@ -1,6 +1,10 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body { visibility: hidden; background: transparent; }
+/* Keep the resource ui_page invisible over the game; background lives on .app */
+html, body {
+    visibility: hidden;
+    background: transparent;
+}
 
 :root {
     --cs-bg:         #0a0a0f;

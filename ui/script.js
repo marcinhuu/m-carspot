@@ -1025,19 +1025,46 @@ $('comment-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') submitComment();
 });
 
+function applyTheme(settings) {
+    if (!settings) return;
+    const theme = (settings.display && settings.display.theme) || settings.theme;
+    if (theme !== 'light' && theme !== 'dark') return;
+    const app = document.getElementsByClassName('app')[0];
+    if (app) app.dataset.theme = theme;
+    document.body.dataset.theme = theme;
+}
+
+/** Dark UI — request white status-bar icons when running inside sd-phone. */
+function requestLightStatusBar() {
+    const c = globalThis.components;
+    if (c && typeof c.setStatusLight === 'function') {
+        c.setStatusLight(true);
+        return;
+    }
+    if (c && typeof c.setStatusLightOverride === 'function') {
+        c.setStatusLightOverride(true);
+        return;
+    }
+    if (c && typeof c.fetchPhone === 'function') {
+        c.fetchPhone('SetStatusLight', true);
+    }
+}
+
 async function initApp() {
     await loadLocales();
     loadFeed(true);
+    requestLightStatusBar();
 
-    if (typeof getSettings !== 'function' || !globalThis.components) return;
+    const getSettingsFn = typeof getSettings === 'function' ? getSettings
+        : (typeof GetSettings === 'function' ? GetSettings : null);
+    const onSettingsChangeFn = typeof onSettingsChange === 'function' ? onSettingsChange
+        : (typeof OnSettingsChange === 'function' ? OnSettingsChange : null);
 
-    onSettingsChange((settings) => {
-        const theme = settings.display.theme;
-        document.getElementsByClassName('app')[0].dataset.theme = theme;
-    });
+    if (!getSettingsFn) return;
+
+    if (onSettingsChangeFn) onSettingsChangeFn(applyTheme);
 
     try {
-        const settings = await getSettings();
-        document.getElementsByClassName('app')[0].dataset.theme = settings.display.theme;
+        applyTheme(await getSettingsFn());
     } catch (e) {}
 }

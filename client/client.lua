@@ -1,29 +1,86 @@
 local APP_ID = Config.AppIdentifier
 
-local function AddApp()
-    local added, err = exports['lb-phone']:AddCustomApp({
+local function resolveUi()
+    local resource = GetCurrentResourceName()
+    local uiPage = GetResourceMetadata(resource, 'ui_page', 0)
+    if not uiPage or uiPage == '' then
+        return resource .. '/ui/index.html'
+    end
+    if uiPage:find('^https?://') then
+        return uiPage
+    end
+    return resource .. '/' .. uiPage
+end
+
+local function buildAppDef()
+    local resource = GetCurrentResourceName()
+    return {
         identifier  = APP_ID,
         name        = Config.AppName,
         description = Config.AppDescription,
         developer   = Config.AppDeveloper,
-        defaultApp  = false,
-        size        = math.floor(Config.AppSize * 1024),
+        defaultApp  = Config.DefaultApp == true,
+        size        = math.floor((Config.AppSize or 4.5) * 1024),
         images      = {
-            'https://cfx-nui-' .. GetCurrentResourceName() .. '/ui/assets/screenshot.png',
+            ('https://cfx-nui-%s/ui/assets/screenshot-light.png'):format(resource),
+            ('https://cfx-nui-%s/ui/assets/screenshot-dark.png'):format(resource),
         },
-        ui   = GetCurrentResourceName() .. '/ui/index.html',
-        icon = 'https://cfx-nui-' .. GetCurrentResourceName() .. '/ui/assets/carspot.png',
-        fixBlur = true
-    })
-    if not added then
-        print('^1[m-carspot] Could not register app: ' .. tostring(err) .. '^0')
+        ui      = resolveUi(),
+        icon    = ('https://cfx-nui-%s/ui/assets/carspot.png'):format(resource),
+        fixBlur = true,
+    }
+end
+
+local function AddApp()
+    local phone = Phone.GetResource()
+    if not phone then return end
+
+    local def = buildAppDef()
+    local ok, err
+
+    if phone == 'sd-phone' then
+        local success, result, resultErr = pcall(function()
+            return exports['sd-phone']:addCustomApp(def)
+        end)
+        if not success then
+            print(('^1[m-carspot] sd-phone addCustomApp error: %s^0'):format(tostring(result)))
+            return
+        end
+        ok, err = result, resultErr
+    else
+        local success, result, resultErr = pcall(function()
+            return exports['lb-phone']:AddCustomApp(def)
+        end)
+        if not success then
+            print(('^1[m-carspot] lb-phone AddCustomApp error: %s^0'):format(tostring(result)))
+            return
+        end
+        ok, err = result, resultErr
+    end
+
+    if not ok then
+        print(('^1[m-carspot] Could not register on %s: %s^0'):format(phone, tostring(err)))
+    else
+        print(('^2[m-carspot] Registered on %s^0'):format(phone))
     end
 end
 
-while GetResourceState('lb-phone') ~= 'started' do Wait(500) end
-AddApp()
+CreateThread(function()
+    local phone = Phone.WaitForStart()
+    Wait(1000)
+    AddApp()
+    print(('^2[m-carspot] Phone backend: %s^0'):format(phone))
+end)
+
 AddEventHandler('onResourceStart', function(res)
-    if res == 'lb-phone' then AddApp() end
+    if res ~= 'sd-phone' and res ~= 'lb-phone' then return end
+    -- Ignore the provided lb-phone alias when sd-phone is the real phone
+    if res == 'lb-phone' and GetResourceState('sd-phone') ~= 'missing' then return end
+    CreateThread(function()
+        while not Phone.GetResource() do Wait(200) end
+        Wait(1000)
+        AddApp()
+    end)
 end)
 
 local function ServerCall(callbackName, data, cb)

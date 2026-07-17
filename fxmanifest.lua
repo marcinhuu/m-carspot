@@ -1,14 +1,14 @@
-fx_version "cerulean"
-game "gta5"
+fx_version 'cerulean'
+game 'gta5'
 lua54 'yes'
 
-title "LB Phone - CarSpot"
-description "A car social network for vehicle lovers. Posts, events, rankings, garage and more."
-author "CarSpot"
-version "1.0.0"
+name 'm-carspot'
+title 'CarSpot'
+description 'A car social network for vehicle lovers. Works with lb-phone and sd-phone.'
+author 'CarSpot'
+version '1.1.0'
 
 dependencies {
-    'lb-phone',
     'oxmysql',
     'ox_lib'
 }
@@ -16,6 +16,7 @@ dependencies {
 shared_scripts {
     '@ox_lib/init.lua',
     'shared/config.lua',
+    'shared/phone.lua',
     'shared/locale.lua',
     'locales/*.lua',
     'shared/bridge.lua',
@@ -32,13 +33,7 @@ server_scripts {
 }
 
 files {
-    'ui/index.html',
-    'ui/script.js',
-    'ui/styles.css',
-    'ui/colors.css',
-    'ui/frame.css',
-    'ui/dev.js',
-    'ui/assets/**/*'
+    'ui/**/*'
 }
 
 ui_page 'ui/index.html'

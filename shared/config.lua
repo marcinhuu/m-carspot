@@ -1,18 +1,25 @@
 Config = {}
 
--- Framework: 'qbcore', 'esx' (auto-detected, no need to change)
-Config.Framework = 'esx'
+-- Framework: 'qbcore' or 'esx' (must match your server)
+Config.Framework = 'qbcore'
 
 -- Locale: 'en', 'pt', 'es', 'fr', 'de', 'it'
 Config.Locale = 'en'
 
--- App identifier (must be unique)
+-- Phone: 'auto' | 'lb-phone' | 'sd-phone'
+-- auto = prefer sd-phone if started, otherwise lb-phone
+Config.Phone = 'sd-phone'
+
+-- App identifier (must be unique; never shown to players)
 Config.AppIdentifier = 'lb-phone-carspot'
 
 Config.AppName = 'CarSpot'
 Config.AppDescription = 'A car social network for vehicle lovers'
 Config.AppDeveloper = 'CarSpot'
 Config.AppSize = 4.5
+
+-- true = pre-installed; false = downloadable from the App Store
+Config.DefaultApp = false
 
 -- Feed: how many posts to load per page
 Config.FeedPageSize = 10
@@ -34,6 +41,6 @@ Config.EventReminderMinutes = 5
 Config.RankingDays = 7
 
 -- Vehicle classes for ranking categories
-Config.ClassicVehicleClasses  = { 'D', 'C' }   -- by GTA class letter or custom tag
+Config.ClassicVehicleClasses  = { 'D', 'C' }
 Config.SupercarVehicleClasses = { 'S', 'X' }
 Config.OffroadVehicleClasses  = { 'offroad', 'SUV', 'O' }

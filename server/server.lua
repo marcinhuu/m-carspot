@@ -37,11 +37,25 @@ local function SendEventReminder(source, eventName, location, minutesLeft)
     if location and location ~= '' then
         content = content .. ' · ' .. location
     end
-    exports['lb-phone']:SendNotification(source, {
-        app = Config.AppIdentifier,
-        title = T('event_reminder_title'),
-        content = content,
-    })
+
+    local phone = Phone.GetResource()
+    if phone == 'sd-phone' then
+        exports['sd-phone']:notify(source, {
+            app   = Config.AppIdentifier,
+            appId = Config.AppIdentifier,
+            title = T('event_reminder_title'),
+            body  = content,
+        })
+        return
+    end
+
+    if phone == 'lb-phone' then
+        exports['lb-phone']:SendNotification(source, {
+            app = Config.AppIdentifier,
+            title = T('event_reminder_title'),
+            content = content,
+        })
+    end
 end
 
 CreateThread(function()
